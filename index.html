@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Client WebSocket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="./style.css"></script>
+    <script>
+      (function() {
+        "use strict";
+        // On attend le chargement complet du DOM
+        window.addEventListener("DOMContentLoaded", function() {
+          var ws = new WebSocket("ws://localhost:8080/", "echo-protocol");
+          let chatMessages = [];
+          const chatInput = document.getElementById("chat-message");
+
+          function fetchChatMessages() {}
+
+          ws.onopen = function(event) {
+            console.log("WebSocket Client Connected");
+            ws.onerror = function(error) {
+              console.log("Connection Error: " + error.toString());
+            };
+
+            ws.onclose = function() {
+              console.log("echo-protocol Connection Closed");
+            };
+
+            ws.onmessage = function(message) {
+              chatMessages = JSON.parse(message.data);
+              const chatList = document.getElementById("chat-messages");
+
+              // Empty list
+              chatList.innerHTML = "";
+
+              // Populate list
+              chatMessages.forEach(chatMessage => {
+                const li = document.createElement("li");
+                li.innerHTML = chatMessage.content;
+                chatList.appendChild(li);
+              });
+            };
+
+            chatInput.addEventListener("change", function(event) {
+              event.preventDefault();
+              const messageText = this.value.trim();
+
+              if (messageText !== "") {
+                ws.send(messageText);
+                this.value = "";
+              }
+            });
+          };
+        });
+      })();
+    </script>
+  </head>
+
+  <body>
+    <div class="chat-container">
+      <ul id="chat-messages"></ul>
+    </div>
+    <div class="chat-footer">
+      <input
+        type="text"
+        name="chat-message"
+        id="chat-message"
+        placeholder="say something nice"
+      />
+    </div>
+  </body>
+</html>

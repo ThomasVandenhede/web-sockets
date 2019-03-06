@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Client WebSocket</title>
+    <script>
+        (function() {
+            'use strict';
+            // On attend le chargement complet du DOM
+            window.addEventListener('DOMContentLoaded', function() {
+
+                // On initie une connexion WebSocket en passant un "protocole" optionnel.
+                var clientWebsocket = new WebSocket('ws://localhost:8080', 'diwjs');
+
+                clientWebsocket.addEventListener('open', function() {
+                    console.log('Connexion WebSocket ouverte');
+
+                    document.getElementById('p').addEventListener('click', function(){
+                        clientWebsocket.send('Hello World!');    
+                    });
+                  
+
+                });
+
+            });
+
+        })();
+    </script>
+</head>
+<body>
+    <h1>Client WebSocket</h1>
+    <p id="p">Envoyer un message WebSocket</p>
+</body>
+</html>

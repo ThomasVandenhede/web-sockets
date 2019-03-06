@@ -1,0 +1,62 @@
+<doctype html!>
+<html>
+  <head>
+    <title>JavaScript - WebSocket</title>
+  </head>
+  <script type="text/javascript">
+    (function(window) {
+
+      // Au chargement du document.
+      window.addEventListener('DOMContentLoaded', function() {
+
+        // Établissement d'une nouvelle connexion WebSocket vers le serveur WebSocket.
+        var webSocketClient = new WebSocket('ws://127.0.0.1:8080/', 'diwjs');
+        /**
+         * Le premier argument est l'URL du serveur WebSocket.
+         * Le second argument est le "protocole". Cette chaîne de caractère peut
+         * être utilisée coté serveur pour déterminer le traitement à effectuer.
+         */
+
+        /**
+         * On attache un gestionnaire d'évènement à l'évènement 'open' qui correspond
+         * à la fin de l'échange request handshake / response handshake.
+         */
+        webSocketClient.addEventListener('open', function(event) {
+
+          var HtmlPElement = window.document.getElementById('clickable-element');
+          HtmlPElement.addEventListener('click', function(event) {
+
+            /**
+             * À chaque clic de souris sur l'élément HTML considéré
+             * on envoi un message à travers la connexion WebSocket.
+             */
+            webSocketClient.send('Hello !');
+
+          });
+
+          /**
+           * On attache un gestionnaire d'évènement à l'évènement "message" qui correspond  à
+           * l'événement déclenché lorsqu'un message à été reçu en provenance du serveur WebSocket.
+           */
+          webSocketClient.addEventListener('message', function(event) {
+
+            /**
+             * À chaque message reçu, on affiche les données
+             * obtenues dans la console du navigateur Internet.
+             */
+            console.log(event.data);
+          });
+        });
+      });
+    })(window);
+  </script>
+  <body>
+    <h1>JavaScript - WebSocket</h1>
+    <ul>
+      <li><a href="https://tools.ietf.org/html/rfc6455">RFC 6455</a></li>
+      <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API">The WebSocket API (WebSockets)</a></li>
+    </ul>
+
+    <p id="clickable-element">Envoyer un message à l'aide de WebSocket</p>
+  </body>
+</html>
